@@ -1,0 +1,224 @@
+---
+title: "Scoping Review Analysis Part 2"
+author: "Marina Zhang"
+date: "2023-11-10"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(ggplot2)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+## Load data
+
+```{r}
+dat <- read.csv("DataCleaningFinalNew.csv", encoding="UTF-8")
+```
+
+### Create a table of overall totals of engineering SRs and MAs adhering to data extraction quality items by SR/MA phase
+
+```{r}
+temp <- data.frame((table(dat$Question)))
+
+colnames(temp)[2] <- "Question"
+
+temp <- cbind(temp, table(dat$Protocol))
+
+colnames(temp)[4] <- "Protocol"
+
+temp <- cbind(temp, table(dat$LibrarianAuthor))
+
+colnames(temp)[6] <- "LibrarianAuthor"
+
+temp <- cbind(temp, table(dat$LibrarianConsulted))
+
+colnames(temp)[8] <- "LibrarianConsulted"
+
+temp <- cbind(temp, table(dat$Criteria))
+
+colnames(temp)[10] <- "Criteria"
+
+temp <- cbind(temp, table(dat$DateSearch))
+
+colnames(temp)[12] <- "DateSearch"
+
+temp <- cbind(temp, table(dat$ListSource))
+
+colnames(temp)[14] <- "ListSource"
+
+temp <- cbind(temp, table(dat$SearchStrategy))
+
+colnames(temp)[16] <- "SearchStrategy"
+
+temp <- cbind(temp, table(dat$SearchString))
+
+colnames(temp)[18] <- "SearchString"
+
+temp <- cbind(temp, table(dat$SearchFilter))
+
+colnames(temp)[20] <- "SearchFilter"
+
+temp <- cbind(temp, table(dat$Flowchart))
+
+colnames(temp)[22] <- "Flowchart"
+
+temp <- cbind(temp, table(dat$Assessment))
+
+colnames(temp)[24] <- "Assessment"
+
+temp <- cbind(temp, table(dat$Reliability))
+
+colnames(temp)[26] <- "Reliability"
+
+temp <- cbind(temp, table(dat$InTitle))
+
+colnames(temp)[28] <- "InTitle"
+
+temp2 <- temp[,c("Question","Protocol","LibrarianAuthor",
+               "LibrarianConsulted", "Criteria", "DateSearch",
+              "ListSource", "SearchStrategy", "SearchString","SearchFilter",
+             "Flowchart", "Assessment", "Reliability",  "InTitle")] 
+
+temp3 <- t(temp2)
+temp3 <- as.data.frame(temp3)
+
+colnames(temp3)[1] <- "No"
+
+colnames(temp3)[2] <- "Yes"
+
+write.csv(temp3, file = "QualityItemRawData.csv")
+```
+
+### Manually reformat table (AKA QualityItemRawData.csv) into three columns:
+### First column of metric (Question, Protocol, etc.)
+### Second column of logic (Yes or No)
+### Third column of Count 
+
+### Rename the file to metric.csv
+
+### Plot Percentage of papers that adhered to or did not adhere to each data extraction quality item
+
+```{r}
+metric <- read.csv("metric.csv", encoding="UTF-8")
+
+ggplot(metric, aes(fill = metric$Logic, y = metric$Count, x = metric$Metric)) +
+  geom_bar(position = "fill", stat = "identity")+
+  #ggtitle("Data Extraction Quality Item") +
+  scale_fill_discrete(name="", breaks=c("Yes", "No"))+
+  theme(plot.title = element_text(hjust=0.5, size =11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10),
+        legend.position = "bottom") +
+  xlab("Data Extraction Quality Item") +
+  scale_x_discrete(limits=c("InTitle" , "Reliability", "Assessment","Flowchart", 
+                            "SearchFilter", "SearchStrategy", "SearchString", "ListSource", 
+                            "DateSearch","Criteria", "LibrarianConsulted", "LibrarianAuthor",
+                            "Protocol","Question"),
+                    labels=c("Question" = "Clearly Defined Research Question",
+                            "Protocol" = "Registered Protocol",
+                            "LibrarianAuthor" = "Librarian or Database Expert Listed as Author",
+                            "LibrarianConsulted" = "Librarian or Database Expert Consulted",
+                            "Criteria" = "Explicit Statement of Inclusion/Exclusion Criteria",
+                            "DateSearch" = "Date Search Run",
+                            "ListSource" = "Included a List of Sources Searched",
+                            "SearchString" = "At Least One Full Database Search String Provided",
+                            "SearchStrategy" = "Database/s Search Strategy Provided (General Themes/Concepts)",
+                            "SearchFilter" = "Search Filters Identified",
+                            "Flowchart"= "PRISMA Flowchart or List of Excluded Studies with Reasons",
+                            "Assessment" = "Explicit Statement of Assessing for Bias of Included Studies",
+                            "Reliability"= "Explicit Statement of Multiple Reviewers or Explanation of Interrater Reliability",
+                            "InTitle" = "SR and/or MA in Paper Title")) +
+  ylab("Percentage") +
+  scale_y_continuous(labels = scales::percent)+
+  coord_flip() 
+```
+
+### Create a table of data extraction quality item paper counts by SR/MA phase, broken donw by if the article authors included SR and/or MA in the paper titles, or not
+### Line 154 is for your reference. 
+### Line 155: 
+##################################### SR and/or MA in Paper Title | SR and/or MA not in Paper Title
+#####################################  Yes      |     No          |     Yes       |     No
+### Clearly Defined Research Question  859      |    997          |    450        |     760
+
+### replace Line 149's Question with other metrics
+
+```{r}
+table(dat$InTitle, dat$SearchQuality)
+table(dat$InTitle, dat$Question)
+```
+### Reformat the table of data extraction quality item paper counts by SR/MA phase, broken donw by if the article authors included SR and/or MA in the paper titles, or not 
+### First column of metric
+### Second column of InTitle (In Paper Title or Not in Paper Title)
+### Third column of Logic (Yes or No)
+### Forth column of Count
+
+### Rename the file as metric_IntTitle.csv
+
+### Plot percentage of papers that adhered to or did not adhere to each data extraction quality item, broken down by if the article aurthors included SR or MA in the paper title
+```{r}
+metric <- read.csv("metric_InTitle.csv", encoding="UTF-8")
+
+metric$InTitle <- factor(
+  metric$InTitle,
+  levels = c("In Paper Title", "Not in Paper Title"),
+  labels = c(
+    "In Paper Title",
+    "Not in Paper Title"
+  )
+)
+
+ggplot(metric, aes(fill = metric$Logic, y = metric$Count, x = metric$Metric)) +
+  geom_bar(position = "fill", stat = "identity")+
+  facet_wrap("InTitle") +
+  #ggtitle("Data Extraction Quality Item") +
+  scale_fill_discrete(name="", breaks=c("Yes", "No"))+
+  theme(plot.title = element_text(hjust=0.5, size =11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10),
+        legend.position = "bottom") +
+  xlab("Data Extraction Quality Item") +
+  scale_x_discrete(limits=c("Reliability", "Assessment","Flowchart", 
+                            "SearchFilter", "SearchStrategy", "SearchString", "ListSource", 
+                            "DateSearch","Criteria", "LibrarianConsulted", "LibrarianAuthor",
+                            "Protocol","Question"),
+                    labels=c("Question" = "Clearly Defined Research Question",
+                            "Protocol" = "Registered Protocol",
+                            "LibrarianAuthor" = "Librarian or Database Expert Listed as Author",
+                            "LibrarianConsulted" = "Librarian or Database Expert Consulted",
+                            "Criteria" = "Explicit Statement of Inclusion/Exclusion Criteria",
+                            "DateSearch" = "Date Search Run",
+                            "ListSource" = "Included a List of Sources Searched",
+                            "SearchString" = "At Least One Full Database Search String Provided",
+                            "SearchStrategy" = "Database/s Search Strategy Provided (General Themes/Concepts)",
+                            "SearchFilter" = "Search Filters Identified",
+                            "Flowchart"= "PRISMA Flowchart or List of Excluded Studies with Reasons",
+                            "Assessment" = "Explicit Statement of Assessing for Bias of Included Studies",
+                            "Reliability"= "Explicit Statement of Multiple Reviewers or Explanation of Interrater Reliability")) +
+  ylab("Percentage") +
+  scale_y_continuous(labels = scales::percent)+
+  coord_flip() 
+```
+
+### Save a plot to TIFF
+### rename the tiff file and adjust height and width
+```{r}
+ggsave(
+  "filename.tiff",
+  width = 8.5,
+  height = 4,
+  units = "in",
+  dpi = 800
+)
+```
+
+
+
+
