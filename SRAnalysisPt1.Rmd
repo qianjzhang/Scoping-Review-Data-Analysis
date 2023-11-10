@@ -2,7 +2,7 @@
 title: "Scoping Review Analysis Part 1"
 author: "Marina Zhang"
 date: "2023-11-10"
-output: html_document
+output: github_document
 ---
 
 ```{r setup, include=FALSE}
