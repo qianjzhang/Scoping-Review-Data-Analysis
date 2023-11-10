@@ -1,0 +1,126 @@
+---
+title: "Scoping Review Analysis Part 1"
+author: "Marina Zhang"
+date: "2023-11-10"
+output: rmarkdown::github_document
+---
+
+```{r setup, include=FALSE}
+rm(list=ls())
+library(tidyverse)
+library(ggplot2)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+## Load data in csv file
+
+```{r}
+dat <- read.csv("DataCleaningFinalNew.csv", encoding="UTF-8")
+```
+
+## Plot the Distribution of Papers by Year: 
+## Plesae change Line 30: ggplot(dat, aes(x=Year)) + 
+############################################################################ 
+## Plot the Distribution of Papers by Database/Repositories/Platforms:
+## Please change Line 30: ggplot(dat, aes(x=DatabasesCount)) +
+
+```{r pressure, echo=FALSE}
+ggplot(dat, aes(x=DatabaseCount)) + 
+  geom_histogram(binwidth = 0.5, color="grey", fill="lightblue") +
+  geom_text(aes(label= ..count..), stat = "count", vjust= "inward", size=1.5)+
+  #geom_density(aes(y = ..count..), color="red") +
+  ggtitle("The Distribution of Databases/Repositories/Platforms") +
+  theme(plot.title = element_text(hjust=0.5, size =11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10),) +
+  xlab("Number of Databases/Repositories/Platforms") +
+  ylab("Article Count")
+```
+
+## Plot the Number of Papers by Discipline
+
+```{r}
+ggplot(dat, aes(x=Discipline)) + 
+  geom_bar(width = 0.5, color="grey", fill="lightblue") +
+  geom_text(aes(label= ..count..), stat = "count", hjust= "inward", size=3)+
+  ggtitle("The Number of Papers by Discipline (n = 3066)") +
+  theme(plot.title = element_text(hjust=0.5, size =11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  xlab("Discipline") +
+  ylab("Count") +
+  coord_flip() 
+```
+
+## Plot the Distribution of Number of Papers by Selected Discipline
+
+```{r}
+ggplot(subset(dat, Discipline %in% c("Biomedical", "Chemical", "Civil",
+                                     "Electrical", "Engineering education",
+                                     "Environmental", "Industrial") ), aes(x = Year)) +
+  geom_histogram(binwidth = 0.5, fill = "lightblue", color="grey") +
+  facet_wrap("Discipline") +
+   geom_text(aes(label= ..count..), stat = "count", vjust= "inward", size=2)+
+  scale_y_continuous(expand = expansion(c(0, 0.05))) +
+  ggtitle("The Distributions of Number of Papers by Selected Discipline") +
+  theme(plot.title = element_text(hjust=0.5, size =11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))+
+  xlab("Year") +
+  ylab("Count") 
+```
+
+### Violin plots of the distribution of the number of databases/repositories/platforms reported in SR/MAs
+### by engineering discipline
+```{r}
+
+ggplot(data = subset(dat, (Discipline != "Nuclear") & (Discipline != "Aeronautical")), aes(DatabaseCount, factor(Discipline))) +
+  geom_violin(trim = FALSE, fill = "lightblue", color="black", scale = "count") +
+  geom_boxplot(width = 0.1, fill = "white", color="red")+
+  ggtitle("Number of Databases/Repositories/Platforms by Discipline") +
+  theme(plot.title = element_text(hjust=0.5, size = 11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10)) +
+  xlab("Number of Databases/Repositories/Platforms") +
+  ylab("Discipline")
+```
+
+### Plot the distribution of papers with high and low search quality
+
+
+```{r}
+ggplot(dat, aes(x = Year)) +
+  geom_histogram(binwidth = 0.5, fill = "lightblue", color="black") +
+  facet_wrap("SearchQuality") +
+  scale_y_continuous(expand = expansion(c(0, 0.05))) +
+  ggtitle("The Distributions of Papers with High and Low Search Quality") +
+  theme(plot.title = element_text(hjust=0.5, size =11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10))+
+  xlab("Year") +
+  ylab("Count") 
+```
+
+###Count of papers by high and low search quality and if the authors consulted with a librarian or database  
+### export or not
+```{r}
+ggplot(dat, aes(SearchQuality, fill=LibrarianConsulted))+
+  geom_bar(width = 0.5, color="grey")+
+  geom_text(aes(label= ..count..), stat = "count", vjust= "inward", size=5)+
+  ggtitle("Is search quality high or low?") +
+  scale_fill_discrete(name="Is a librarian or database expert consulted?")+
+  theme(plot.title = element_text(hjust=0.5, size = 11),
+        axis.title.x = element_text(size=10),
+        axis.title.y = element_text(size=10),
+        legend.position = "bottom"
+        ) +
+  xlab("") +
+  ylab("Count")
+```
+
+
+
+
