@@ -1,0 +1,53 @@
+﻿Metric,InTitle,Logic,Count
+Question,In Paper Title,No,997
+Question,In Paper Title,Yes,859
+Question,Not in Paper Title,Yes,450
+Question,Not in Paper Title,No,760
+Protocol,In Paper Title,No,1824
+Protocol,In Paper Title,Yes,52
+Protocol,Not in Paper Title,Yes,4
+Protocol,Not in Paper Title,No,1206
+LibrarianAuthor,In Paper Title,No,1839
+LibrarianAuthor,In Paper Title,Yes,17
+LibrarianAuthor,Not in Paper Title,Yes,2
+LibrarianAuthor,Not in Paper Title,No,1208
+LibrarianConsulted,In Paper Title,No,1804
+LibrarianConsulted,In Paper Title,Yes,52
+LibrarianConsulted,Not in Paper Title,Yes,10
+LibrarianConsulted,Not in Paper Title,No,1200
+Criteria,In Paper Title,No,528
+Criteria,In Paper Title,Yes,1328
+Criteria,Not in Paper Title,Yes,626
+Criteria,Not in Paper Title,No,584
+DateSearch,In Paper Title,No,1269
+DateSearch,In Paper Title,Yes,587
+DateSearch,Not in Paper Title,Yes,280
+DateSearch,Not in Paper Title,No,930
+ListSource,In Paper Title,No,75
+ListSource,In Paper Title,Yes,1781
+ListSource,Not in Paper Title,Yes,1156
+ListSource,Not in Paper Title,No,54
+SearchStrategy,In Paper Title,No,77
+SearchStrategy,In Paper Title,Yes,1779
+SearchStrategy,Not in Paper Title,Yes,1133
+SearchStrategy,Not in Paper Title,No,77
+SearchString,In Paper Title,No,1389
+SearchString,In Paper Title,Yes,467
+SearchString,Not in Paper Title,Yes,241
+SearchString,Not in Paper Title,No,969
+SearchFilter,In Paper Title,No,1038
+SearchFilter,In Paper Title,Yes,818
+SearchFilter,Not in Paper Title,Yes,453
+SearchFilter,Not in Paper Title,No,757
+Flowchart,In Paper Title,No,733
+Flowchart,In Paper Title,Yes,1123
+Flowchart,Not in Paper Title,Yes,451
+Flowchart,Not in Paper Title,No,759
+Assessment,In Paper Title,No,1555
+Assessment,In Paper Title,Yes,301
+Assessment,Not in Paper Title,Yes,67
+Assessment,Not in Paper Title,No,1143
+Reliability,In Paper Title,No,1510
+Reliability,In Paper Title,Yes,346
+Reliability,Not in Paper Title,Yes,118
+Reliability,Not in Paper Title,No,1092
