@@ -23,7 +23,7 @@ dat <- read.csv("DataCleaningFinalNew.csv", encoding="UTF-8")
 
 ## Plot the Distribution of Papers by Year: 
 ## Plesae change Line 30: ggplot(dat, aes(x=Year)) + 
-############################################################################ 
+
 ## Plot the Distribution of Papers by Database/Repositories/Platforms:
 ## Please change Line 30: ggplot(dat, aes(x=DatabasesCount)) +
 
@@ -90,7 +90,6 @@ ggplot(data = subset(dat, (Discipline != "Nuclear") & (Discipline != "Aeronautic
 
 ### Plot the distribution of papers with high and low search quality
 
-
 ```{r}
 ggplot(dat, aes(x = Year)) +
   geom_histogram(binwidth = 0.5, fill = "lightblue", color="black") +
@@ -104,14 +103,17 @@ ggplot(dat, aes(x = Year)) +
   ylab("Count") 
 ```
 
-###Count of papers by high and low search quality and if the authors consulted with a librarian or database  
-### export or not
+### Count of papers by high and low search quality and if the authors consulted with a librarian or database  export or not
+
 ```{r}
-ggplot(dat, aes(SearchQuality, fill=LibrarianConsulted))+
+dat$SearchQuality <- factor(dat$SearchQuality, levels = c("low", "high"))
+
+ggplot(dat, aes(LibrarianConsulted, fill=SearchQuality))+
   geom_bar(width = 0.5, color="grey")+
-  geom_text(aes(label= ..count..), stat = "count", vjust= "inward", size=5)+
-  ggtitle("Is search quality high or low?") +
-  scale_fill_discrete(name="Is a librarian or database expert consulted?")+
+  geom_text(aes(label= ..count..), stat = "count", check_overlap = TRUE, position = position_dodge(0.2), vjust =0.4,   size=3)+
+  ggtitle("Was a librarian reported as being consulted with?") +
+  scale_fill_manual("Is search quality high or low?", values =c("high"="#00BFC4",       "low"="#F8766D")) + 
+  #scale_fill_discrete(name="Is search quality high or low?")+
   theme(plot.title = element_text(hjust=0.5, size = 11),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10),
