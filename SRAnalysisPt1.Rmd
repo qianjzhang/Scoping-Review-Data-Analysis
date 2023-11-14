@@ -9,6 +9,7 @@ output: html_document
 rm(list=ls())
 library(tidyverse)
 library(ggplot2)
+#library(ggrepel)
 ```
 
 ## R Markdown
@@ -106,21 +107,21 @@ ggplot(dat, aes(x = Year)) +
 ### Count of papers by high and low search quality and if the authors consulted with a librarian or database  export or not
 
 ```{r}
-dat$SearchQuality <- factor(dat$SearchQuality, levels = c("low", "high"))
+temp <- data.frame(table(dat$LibrarianConsulted, dat$SearchQuality))
+temp$Var2 <- factor(temp$Var2, levels = c("low", "high"))
+temp$Var1 <- factor(temp$Var1, levels = c("yes", "no"))
 
-ggplot(dat, aes(LibrarianConsulted, fill=SearchQuality))+
-  geom_bar(width = 0.5, color="grey")+
-  geom_text(aes(label= ..count..), stat = "count", check_overlap = TRUE, position = position_dodge(0.2), vjust =0.4,   size=3)+
+ggplot(temp, aes(fill = Var2, y = Freq, x = Var1)) +
+  geom_bar(position = "fill", stat = "identity")+
   ggtitle("Was a librarian reported as being consulted with?") +
-  scale_fill_manual("Is search quality high or low?", values =c("high"="#00BFC4",       "low"="#F8766D")) + 
-  #scale_fill_discrete(name="Is search quality high or low?")+
-  theme(plot.title = element_text(hjust=0.5, size = 11),
+  scale_fill_discrete(name="Is search quality high or low?", breaks=c("high", "low"))+
+  theme(plot.title = element_text(hjust=0.5, size =11),
         axis.title.x = element_text(size=10),
         axis.title.y = element_text(size=10),
-        legend.position = "bottom"
-        ) +
+        legend.position = "bottom") +
   xlab("") +
-  ylab("Count")
+  ylab("Percentage") +
+  scale_y_continuous(labels = scales::percent)
 ```
 
 
